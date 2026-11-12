@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="zh-CN"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>GPT 未必是最好的建模师，但它会改 134 次</title>
+<meta name="description" content="它第一次建出来的模型像乐高。134 轮之后，它是一个可以换机位、改灯光、继续编辑的三维场景。">
+<meta property="og:image" content="https://fangde.github.io/gpt-code-modeling/images/cover.jpg">
+<style>
+  :root { --paper:#F2EEE3; --ink:#111; --red:#DF3524; --yel:#F0C200; --blu:#1D3FA6; }
+  * { box-sizing:border-box; }
+  body { margin:0; background:var(--paper); color:#2a2620;
+    font-family:-apple-system,BlinkMacSystemFont,'PingFang SC','Helvetica Neue',sans-serif; }
+  .wrap { max-width:780px; margin:0 auto; padding:44px 18px 80px; }
+  .kicker { font-size:12.5px; letter-spacing:3px; font-weight:800; color:var(--ink);
+    margin:0 0 16px; display:flex; align-items:center; gap:10px; }
+  .kicker::before { content:""; width:16px; height:16px; border-radius:50%; background:var(--red); }
+  h1 { font-size:clamp(26px,5.2vw,38px); line-height:1.3; margin:0 0 14px; font-weight:800; }
+  .sub { font-size:clamp(14px,2.5vw,16px); color:#4a453d; line-height:1.7; margin:0;
+    padding:12px 16px; background:#fff; border-left:5px solid var(--blu); }
+  .cover { width:100%; display:block; margin:26px 0 0; border-radius:4px;
+    box-shadow:0 14px 40px rgba(17,17,17,.16); }
+  .card { background:#fff; margin-top:26px; padding:4px 22px;
+    box-shadow:0 8px 28px rgba(17,17,17,.07); }
+  .foot { margin-top:34px; padding-top:20px; border-top:2px solid var(--red);
+    font-size:13px; color:#6b6459; }
+  @media (max-width:520px){ .wrap{padding:26px 12px 60px;} .card{padding:4px 14px;} }
+</style></head><body><div class="wrap">
+<header>
+  <p class="kicker">RECURSIVE SELF-IMPROVEMENT · v1 — v134</p>
+  <h1>GPT 未必是最好的建模师，但它会改 134 次</h1>
+  <p class="sub">一次三维建模实测：从「像乐高」到可换机位、可改灯光、可继续编辑的场景</p>
+</header>
+<img class="cover" src="images/cover.jpg" alt="GPT 未必是最好的建模师，但它会改 134 次">
+<main class="card">
+<section style="font-family: 'Helvetica Neue', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', sans-serif; font-size: 15.5px; color: #3B382E; line-height: 1.78; letter-spacing: 0.01em; padding: 22px 20px; background: #F2EEE3;">
+<p style="margin: 16px 0; text-indent: 0; text-align: justify; color: #3B382E; line-height: 1.78;">最近 Google Carbon 放出的 Demo 很惊艳：给一段大西洋海底的视频，它能生成一个 Three.js 的三维场景。</p>
+<p style="margin: 16px 0; text-indent: 0; text-align: justify; color: #3B382E; line-height: 1.78;">至于怎么做到的，说法不一。一种说法是模型已经具备很强的空间感知，可以直接从视频理解三维结构并重建；另一种说法是它用了 Swarm——多智能体流水线，有的 Agent 建模，有的负责材质，有的负责灯光，最后拼成一个完整场景。</p>
+<p style="margin: 16px 0; text-indent: 0; text-align: justify; color: #3B382E; line-height: 1.78;">同期也有人用 Claude 做出了很漂亮的动画，但风格偏卡通，离超写实还有距离。</p>
+<p style="margin: 16px 0; text-indent: 0; text-align: justify; color: #3B382E; line-height: 1.78;">而我心里一直有个判断：论画面表现力，GPT 是我用过最强的。过去两年我用它出过大量概念图，构图、细节、气质都很稳。</p>
+<p style="margin: 16px 0; text-indent: 0; text-align: justify; color: #3B382E; line-height: 1.78;">所以问题很自然：<strong style="color: #DF3524; font-weight: 700;">它既然能画出这么漂亮的概念图，为什么不能把这些图真的建成三维世界？</strong></p>
+<p style="margin: 16px 0; text-indent: 0; text-align: justify; color: #3B382E; line-height: 1.78;">于是我做了一个实验。</p>
+<p style="text-align: center; color: #131313; letter-spacing: 14px; font-size: 11px; margin: 36px 0; user-select: none;">▲ ■ ●</p>
+<h2 style="font-family: 'Futura', 'Avenir Next', 'Avenir', 'Helvetica Neue', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', sans-serif; font-size: 18px; font-weight: 700; color: #131313; margin: 40px 0 16px; padding: 12px 16px; background: #E8E2D3; border-left: 4px solid #1D3FA6; border-radius: 0; line-height: 1.28; letter-spacing: -0.01em;">一、先说原来的做法，以及它的问题</h2>
+<p style="margin: 16px 0; text-indent: 0; text-align: justify; color: #3B382E; line-height: 1.78;">按以前的工作流，我会让 GPT 出一张概念图，再补几张不同角度的参考，然后交给 SeeDance 这类视觉生成模型，直接出一段高清视频。</p>
+<p style="margin: 16px 0; text-indent: 0; text-align: justify; color: #3B382E; line-height: 1.78;">这条路很成熟：画面漂亮、速度快、成本低。</p>
+<p style="margin: 16px 0; text-indent: 0; text-align: justify; color: #3B382E; line-height: 1.78;">但它有个根本问题——<strong style="color: #DF3524; font-weight: 700;">你拿到的是视频，不是一个世界。</strong></p>
+<p style="margin: 16px 0; text-indent: 0; text-align: justify; color: #3B382E; line-height: 1.78;">视频里的人和场景看起来是真的，但你进不去。不能换机位，不能挪动一件家具，不能重新布光，也不能让人物按新的指令动一下。</p>
+<p style="margin: 16px 0; text-indent: 0; text-align: justify; color: #3B382E; line-height: 1.78;">所以要挑战的不是"能不能生成好看的画面"，而是"能不能生成一个可操作的三维结构"。</p>
+<p style="text-align: center; color: #131313; letter-spacing: 14px; font-size: 11px; margin: 36px 0; user-select: none;">▲ ■ ●</p>
+<h2 style="font-family: 'Futura', 'Avenir Next', 'Avenir', 'Helvetica Neue', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', sans-serif; font-size: 18px; font-weight: 700; color: #131313; margin: 40px 0 16px; padding: 12px 16px; background: #E8E2D3; border-left: 4px solid #1D3FA6; border-radius: 0; line-height: 1.28; letter-spacing: -0.01em;">二、裸测：给它几张图，结果像乐高</h2>
+<p style="margin: 16px 0; text-indent: 0; text-align: justify; color: #3B382E; line-height: 1.78;">第一次尝试很直接：把参考图丢给它，让它写代码建一个三维模型。</p>
+<p style="margin: 16px 0; text-indent: 0; text-align: justify; color: #3B382E; line-height: 1.78;">结果一塌糊涂。</p>
+<p style="margin: 16px 0; text-indent: 0; text-align: justify; color: #3B382E; line-height: 1.78;">几何是粗糙的块面，细节缺失，材质没有反射层次。跟它自己画的那张概念图放在一起，简直不像同一个模型做出来的。</p>
+<p style="margin: 16px 0; text-indent: 0; text-align: justify; color: #3B382E; line-height: 1.78;">这一步必须先说清楚，因为它决定了后面所有讨论的前提：<strong style="color: #DF3524; font-weight: 700;">GPT 一次性生成三维模型，能力很弱。</strong> 任何"GPT 建模很强"的说法，如果不加条件，都是错的。</p>
+<p style="text-align: center; color: #131313; letter-spacing: 14px; font-size: 11px; margin: 36px 0; user-select: none;">▲ ■ ●</p>
+<h2 style="font-family: 'Futura', 'Avenir Next', 'Avenir', 'Helvetica Neue', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', sans-serif; font-size: 18px; font-weight: 700; color: #131313; margin: 40px 0 16px; padding: 12px 16px; background: #E8E2D3; border-left: 4px solid #1D3FA6; border-radius: 0; line-height: 1.28; letter-spacing: -0.01em;">三、我给它的不是提示词，而是一套 RSI</h2>
+<p style="margin: 16px 0; text-indent: 0; text-align: justify; color: #3B382E; line-height: 1.78;">真正起作用的不是某句咒语，是我给它搭了一套递归自我改进（Recursive Self-Improvement）的工作环境。</p>
+<h3 style="font-family: 'Futura', 'Avenir Next', 'Avenir', 'Helvetica Neue', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', sans-serif; font-size: 16px; font-weight: 700; color: #131313; margin: 28px 0 12px; padding: 0 0 8px 0; border-bottom: 1px solid rgba(19, 19, 19, 0.14); letter-spacing: 0; line-height: 1.35;">状态是文件，不是记忆</h3>
+<p style="margin: 16px 0; text-indent: 0; text-align: justify; color: #3B382E; line-height: 1.78;">整个任务的状态写在一个 <code style="background: #E8E2D3; color: #131313; padding: 2px 6px; border-radius: 0; font-size: 13px; font-family: 'SF Mono', 'IBM Plex Mono', 'Menlo', 'Consolas', monospace; border: 1px solid rgba(19, 19, 19, 0.14);">current_checkpoint.json</code> 里：当前目标、当前主干 .blend、上一个检查点、<code style="background: #E8E2D3; color: #131313; padding: 2px 6px; border-radius: 0; font-size: 13px; font-family: 'SF Mono', 'IBM Plex Mono', 'Menlo', 'Consolas', monospace; border: 1px solid rgba(19, 19, 19, 0.14);">completion_proven</code>、以及下一步要做什么。</p>
+<p style="margin: 16px 0; text-indent: 0; text-align: justify; color: #3B382E; line-height: 1.78;">每轮结束时更新它。这样即使换了会话、隔了几天，模型仍然知道自己停在哪、上次为什么被否。</p>
+<h3 style="font-family: 'Futura', 'Avenir Next', 'Avenir', 'Helvetica Neue', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', sans-serif; font-size: 16px; font-weight: 700; color: #131313; margin: 28px 0 12px; padding: 0 0 8px 0; border-bottom: 1px solid rgba(19, 19, 19, 0.14); letter-spacing: 0; line-height: 1.35;">工具是真的工具</h3>
+<p style="margin: 16px 0; text-indent: 0; text-align: justify; color: #3B382E; line-height: 1.78;">它不只是"想一想再写代码"，它可以调用：</p>
+<ul style="margin: 18px 0; padding-left: 0; list-style: none;"><li style="margin: 10px 0; line-height: 1.78; color: #3B382E; font-weight: 400;"><span style="display: inline-block; width: 7px; height: 7px; background: #DF3524; border-radius: 0; margin-right: 12px; vertical-align: 3px;">&nbsp;</span><strong style="color: #DF3524; font-weight: 700;">Depth Anything 3</strong>（da3_large / da3_small）——从单帧或多视角出深度与相机参数；</li>
+<li style="margin: 10px 0; line-height: 1.78; color: #3B382E; font-weight: 400;"><span style="display: inline-block; width: 7px; height: 7px; background: #DF3524; border-radius: 0; margin-right: 12px; vertical-align: 3px;">&nbsp;</span><strong style="color: #DF3524; font-weight: 700;">SfM</strong>——多视角特征匹配与稀疏重建，用来定相机和空间关系；</li>
+<li style="margin: 10px 0; line-height: 1.78; color: #3B382E; font-weight: 400;"><span style="display: inline-block; width: 7px; height: 7px; background: #DF3524; border-radius: 0; margin-right: 12px; vertical-align: 3px;">&nbsp;</span><strong style="color: #DF3524; font-weight: 700;">OpenCV</strong>——光流跟踪、掩膜、椭圆拟合、轮廓提取；</li>
+<li style="margin: 10px 0; line-height: 1.78; color: #3B382E; font-weight: 400;"><span style="display: inline-block; width: 7px; height: 7px; background: #DF3524; border-radius: 0; margin-right: 12px; vertical-align: 3px;">&nbsp;</span><strong style="color: #DF3524; font-weight: 700;">SciPy</strong>——最小二乘、稀疏求解、二次曲线拟合、图割；</li>
+<li style="margin: 10px 0; line-height: 1.78; color: #3B382E; font-weight: 400;"><span style="display: inline-block; width: 7px; height: 7px; background: #DF3524; border-radius: 0; margin-right: 12px; vertical-align: 3px;">&nbsp;</span><strong style="color: #DF3524; font-weight: 700;">skimage</strong>——连通域与测度；</li>
+<li style="margin: 10px 0; line-height: 1.78; color: #3B382E; font-weight: 400;"><span style="display: inline-block; width: 7px; height: 7px; background: #DF3524; border-radius: 0; margin-right: 12px; vertical-align: 3px;">&nbsp;</span><strong style="color: #DF3524; font-weight: 700;">bpy</strong>——直接操作 Blender，建网格、加约束、改材质、设相机、渲染。</li></ul>
+<p style="margin: 16px 0; text-indent: 0; text-align: justify; color: #3B382E; line-height: 1.78;">这些工具解决的是同一件事：<strong style="color: #DF3524; font-weight: 700;">把"看起来不对"翻译成可测量的数字。</strong> 脸宽了多少像素、椭圆中心偏了几像素、法向余弦掉到多少。</p>
+<h3 style="font-family: 'Futura', 'Avenir Next', 'Avenir', 'Helvetica Neue', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', sans-serif; font-size: 16px; font-weight: 700; color: #131313; margin: 28px 0 12px; padding: 0 0 8px 0; border-bottom: 1px solid rgba(19, 19, 19, 0.14); letter-spacing: 0; line-height: 1.35;">一轮长什么样</h3>
+<p style="text-align:center;margin:16px 0;"><img src="images/01.png" alt="一轮 RSI 的循环" style="max-width: 100%; height: auto; border-radius: 0; margin: 26px auto; display: block; border: 2px solid #131313; background: #F2EEE3;"/></p>
+<p style="font-size: 12.5px; color: #6F6A5B; text-align: left; margin-top: 10px; letter-spacing: 0.06em; font-family: 'SF Mono', 'IBM Plex Mono', 'Menlo', 'Consolas', monospace;">一轮 RSI 的循环</p>
+<ol style="margin: 18px 0; padding-left: 0; list-style: none; counter-reset: list;"><li style="margin: 10px 0; line-height: 1.78; color: #3B382E; font-weight: 400;"><span style="display: inline-block; background: #DF3524; color: #F2EEE3; font-family: 'Futura', 'Avenir Next', 'Helvetica Neue', 'PingFang SC', sans-serif; font-weight: 700; font-size: 12px; letter-spacing: 0.04em; min-width: 22px; height: 22px; line-height: 22px; text-align: center; border-radius: 0; margin-right: 12px; vertical-align: 2px;">01</span>取一张同源参考帧（原视频同一时刻的画面）；</li>
+<li style="margin: 10px 0; line-height: 1.78; color: #3B382E; font-weight: 400;"><span style="display: inline-block; background: #DF3524; color: #F2EEE3; font-family: 'Futura', 'Avenir Next', 'Helvetica Neue', 'PingFang SC', sans-serif; font-weight: 700; font-size: 12px; letter-spacing: 0.04em; min-width: 22px; height: 22px; line-height: 22px; text-align: center; border-radius: 0; margin-right: 12px; vertical-align: 2px;">02</span>用量化工具测出结构：478 个特征点、椭圆中心与宽度、深度图、可见性掩膜；</li>
+<li style="margin: 10px 0; line-height: 1.78; color: #3B382E; font-weight: 400;"><span style="display: inline-block; background: #DF3524; color: #F2EEE3; font-family: 'Futura', 'Avenir Next', 'Helvetica Neue', 'PingFang SC', sans-serif; font-weight: 700; font-size: 12px; letter-spacing: 0.04em; min-width: 22px; height: 22px; line-height: 22px; text-align: center; border-radius: 0; margin-right: 12px; vertical-align: 2px;">03</span>生成或修改 bpy 脚本，在 Blender 里改几何、材质、灯光；</li>
+<li style="margin: 10px 0; line-height: 1.78; color: #3B382E; font-weight: 400;"><span style="display: inline-block; background: #DF3524; color: #F2EEE3; font-family: 'Futura', 'Avenir Next', 'Helvetica Neue', 'PingFang SC', sans-serif; font-weight: 700; font-size: 12px; letter-spacing: 0.04em; min-width: 22px; height: 22px; line-height: 22px; text-align: center; border-radius: 0; margin-right: 12px; vertical-align: 2px;">04</span>渲染同一帧；</li>
+<li style="margin: 10px 0; line-height: 1.78; color: #3B382E; font-weight: 400;"><span style="display: inline-block; background: #DF3524; color: #F2EEE3; font-family: 'Futura', 'Avenir Next', 'Helvetica Neue', 'PingFang SC', sans-serif; font-weight: 700; font-size: 12px; letter-spacing: 0.04em; min-width: 22px; height: 22px; line-height: 22px; text-align: center; border-radius: 0; margin-right: 12px; vertical-align: 2px;">05</span>与参考帧逐像素比对：整帧 MAE、固定脸框 MAE、轮廓像素差、SSIM；</li>
+<li style="margin: 10px 0; line-height: 1.78; color: #3B382E; font-weight: 400;"><span style="display: inline-block; background: #DF3524; color: #F2EEE3; font-family: 'Futura', 'Avenir Next', 'Helvetica Neue', 'PingFang SC', sans-serif; font-weight: 700; font-size: 12px; letter-spacing: 0.04em; min-width: 22px; height: 22px; line-height: 22px; text-align: center; border-radius: 0; margin-right: 12px; vertical-align: 2px;">06</span>写一份验证 JSON；</li>
+<li style="margin: 10px 0; line-height: 1.78; color: #3B382E; font-weight: 400;"><span style="display: inline-block; background: #DF3524; color: #F2EEE3; font-family: 'Futura', 'Avenir Next', 'Helvetica Neue', 'PingFang SC', sans-serif; font-weight: 700; font-size: 12px; letter-spacing: 0.04em; min-width: 22px; height: 22px; line-height: 22px; text-align: center; border-radius: 0; margin-right: 12px; vertical-align: 2px;">07</span>判定：晋升为检查点，还是拒绝。</li></ol>
+<p style="margin: 16px 0; text-indent: 0; text-align: justify; color: #3B382E; line-height: 1.78;">拒绝的理由必须写进 <code style="background: #E8E2D3; color: #131313; padding: 2px 6px; border-radius: 0; font-size: 13px; font-family: 'SF Mono', 'IBM Plex Mono', 'Menlo', 'Consolas', monospace; border: 1px solid rgba(19, 19, 19, 0.14);">PROGRESS.md</code>，因为这些理由决定了后面"不再做什么"。</p>
+<h3 style="font-family: 'Futura', 'Avenir Next', 'Avenir', 'Helvetica Neue', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', sans-serif; font-size: 16px; font-weight: 700; color: #131313; margin: 28px 0 12px; padding: 0 0 8px 0; border-bottom: 1px solid rgba(19, 19, 19, 0.14); letter-spacing: 0; line-height: 1.35;">卡点都是量出来的</h3>
+<p style="margin: 16px 0; text-indent: 0; text-align: justify; color: #3B382E; line-height: 1.78;">举两个真实例子。</p>
+<p style="margin: 16px 0; text-indent: 0; text-align: justify; color: #3B382E; line-height: 1.78;">第一个：早期导出镜头时，竖幅 AUTO 传感器适配用错了 720 px，算出焦距 616.75 px。修正后是 1096.44 px——差 1.78 倍。在这之前所有"脸型不对"的判断，可能都在修一个本来没错的模型。</p>
+<p style="margin: 16px 0; text-indent: 0; text-align: justify; color: #3B382E; line-height: 1.78;">第二个：第 96 帧的耳盖中心，模型给的是 (132.63, 564.55)，实际是 (159.88, 561.08)，差 27.47 px；椭圆宽度 56.14 对 30.51。</p>
+<p style="margin: 16px 0; text-indent: 0; text-align: justify; color: #3B382E; line-height: 1.78;">这类错误在纯手工流程里几乎无法自查，因为它不在任何一步上报错。只有当你被迫把两张图叠在一起量像素时，它才会暴露。</p>
+<p style="text-align: center; color: #131313; letter-spacing: 14px; font-size: 11px; margin: 36px 0; user-select: none;">▲ ■ ●</p>
+<h2 style="font-family: 'Futura', 'Avenir Next', 'Avenir', 'Helvetica Neue', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', sans-serif; font-size: 18px; font-weight: 700; color: #131313; margin: 40px 0 16px; padding: 12px 16px; background: #E8E2D3; border-left: 4px solid #1D3FA6; border-radius: 0; line-height: 1.28; letter-spacing: -0.01em;">四、134 轮里，真正被采纳的只是少数</h2>
+<p style="margin: 16px 0; text-indent: 0; text-align: justify; color: #3B382E; line-height: 1.78;">从 v1 到 v134，检查点停在 v131。留下 86 个 .blend 快照、276 份验证 JSON、202 个日志。</p>
+<p style="margin: 16px 0; text-indent: 0; text-align: justify; color: #3B382E; line-height: 1.78;">其中晋升为检查点的只有 8 个：v47、v57、v80、v91、v96、v106、v125、v131。</p>
+<p style="margin: 16px 0; text-indent: 0; text-align: justify; color: #3B382E; line-height: 1.78;">其余一百多个版本，是对单点假设的验证、参数扫描，或者否决。</p>
+<p style="margin: 16px 0; text-indent: 0; text-align: justify; color: #3B382E; line-height: 1.78;">而且收益高度集中：v57 → v80 这 23 个版本，整帧误差降 6.4%、脸框降 19.6%；整个项目累计是整帧 −7.3%、脸框 −22.4%。<strong style="color: #DF3524; font-weight: 700;">八成以上的进步在那一小段里完成</strong>，后面五十多个版本只贡献零头。</p>
+<p style="margin: 16px 0; text-indent: 0; text-align: justify; color: #3B382E; line-height: 1.78;">被否掉的方案同样重要，比如：</p>
+<ul style="margin: 18px 0; padding-left: 0; list-style: none;"><li style="margin: 10px 0; line-height: 1.78; color: #3B382E; font-weight: 400;"><span style="display: inline-block; width: 7px; height: 7px; background: #DF3524; border-radius: 0; margin-right: 12px; vertical-align: 3px;">&nbsp;</span>用对数 SH 拟合光照：方向检查通过，实际像素反而变差；</li>
+<li style="margin: 10px 0; line-height: 1.78; color: #3B382E; font-weight: 400;"><span style="display: inline-block; width: 7px; height: 7px; background: #DF3524; border-radius: 0; margin-right: 12px; vertical-align: 3px;">&nbsp;</span>相机偏航 −6.06°：第 96 帧中心拉回来了，椭圆宽度却从 56 px 恶化到 65 px；</li>
+<li style="margin: 10px 0; line-height: 1.78; color: #3B382E; font-weight: 400;"><span style="display: inline-block; width: 7px; height: 7px; background: #DF3524; border-radius: 0; margin-right: 12px; vertical-align: 3px;">&nbsp;</span>均匀图深度整形：朝向检查通过，画面出现可见高频波纹。</li></ul>
+<p style="margin: 16px 0; text-indent: 0; text-align: justify; color: #3B382E; line-height: 1.78;">这里面反复出现同一条教训：<strong style="color: #DF3524; font-weight: 700;">「指标变好」和「东西变好」不是一回事。</strong></p>
+<p style="text-align: center; color: #131313; letter-spacing: 14px; font-size: 11px; margin: 36px 0; user-select: none;">▲ ■ ●</p>
+<h2 style="font-family: 'Futura', 'Avenir Next', 'Avenir', 'Helvetica Neue', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', sans-serif; font-size: 18px; font-weight: 700; color: #131313; margin: 40px 0 16px; padding: 12px 16px; background: #E8E2D3; border-left: 4px solid #1D3FA6; border-radius: 0; line-height: 1.28; letter-spacing: -0.01em;">五、怎么证明它是三维模型，而不是一张图</h2>
+<p style="margin: 16px 0; text-indent: 0; text-align: justify; color: #3B382E; line-height: 1.78;">这是这次实验里我最在意的部分。渲染得很像，不等于三维结构成立。</p>
+<p style="margin: 16px 0; text-indent: 0; text-align: justify; color: #3B382E; line-height: 1.78;">所以每一轮都要过一套与"像不像"无关的检查：</p>
+<p style="text-align:center;margin:16px 0;"><img src="images/02.png" alt="什么才算通过" style="max-width: 100%; height: auto; border-radius: 0; margin: 26px auto; display: block; border: 2px solid #131313; background: #F2EEE3;"/></p>
+<p style="font-size: 12.5px; color: #6F6A5B; text-align: left; margin-top: 10px; letter-spacing: 0.06em; font-family: 'SF Mono', 'IBM Plex Mono', 'Menlo', 'Consolas', monospace;">什么才算通过</p>
+<p style="margin: 16px 0; text-indent: 0; text-align: justify; color: #3B382E; line-height: 1.78;"><strong style="color: #DF3524; font-weight: 700;">拓扑。</strong> 240 帧共用同一套 22,584 个三角，索引固定。相对上一检查点，面积大于 1e-8 的三角无一翻转；最小法线余弦 0.2819。</p>
+<p style="margin: 16px 0; text-indent: 0; text-align: justify; color: #3B382E; line-height: 1.78;"><strong style="color: #DF3524; font-weight: 700;">身份一致。</strong> 28 个形态键不是 28 个模型，而是一套位移作用在同一个 11,468 顶点网格上。所有键的位移误差小于 4e-6 世界单位；眼睑与嘴部的边界连接误差小于 3e-5。这保证了 240 帧里始终是同一张脸。</p>
+<p style="margin: 16px 0; text-indent: 0; text-align: justify; color: #3B382E; line-height: 1.78;"><strong style="color: #DF3524; font-weight: 700;">装配。</strong> 耳部五个闭合实体：零边界边、零非流形边、体积为正；隐藏根轴嵌入头部 3.89 mm；机械颈六组活塞在 240 帧上的卡箍接触误差 2.75e-7。</p>
+<p style="margin: 16px 0; text-indent: 0; text-align: justify; color: #3B382E; line-height: 1.78;"><strong style="color: #DF3524; font-weight: 700;">可重开。</strong> 31 张图片全部内嵌在文件里，换台机器打开不需要外部路径；重开后仍停在参考帧，按 F12 直接出图，不依赖任何 Python 处理器。</p>
+<p style="margin: 16px 0; text-indent: 0; text-align: justify; color: #3B382E; line-height: 1.78;"><strong style="color: #DF3524; font-weight: 700;">可改。</strong> 这条是分界线。换机位、改灯光、换姿态之后效果仍然成立，说明它背后有一份真的三维数据；而视频做不到这件事。</p>
+<p style="margin: 16px 0; text-indent: 0; text-align: justify; color: #3B382E; line-height: 1.78;">但同样要说清楚这些检查<strong style="color: #DF3524; font-weight: 700;">不能</strong>证明什么：</p>
+<p style="margin: 16px 0; text-indent: 0; text-align: justify; color: #3B382E; line-height: 1.78;">它们不等于没有自交，也不等于解剖正确。边界与法向检查只是"没有明显破裂"。</p>
+<p style="margin: 16px 0; text-indent: 0; text-align: justify; color: #3B382E; line-height: 1.78;">更关键的是，RGB 均值不能当姿态证据。第 96 帧的脸框误差确实比上一版低了，可那张图肉眼一看就是错的。<strong style="color: #DF3524; font-weight: 700;">平均值变好，可以和一个明显错误共存。</strong></p>
+<p style="margin: 16px 0; text-indent: 0; text-align: justify; color: #3B382E; line-height: 1.78;">这也是为什么最终判定是 <code style="background: #E8E2D3; color: #131313; padding: 2px 6px; border-radius: 0; font-size: 13px; font-family: 'SF Mono', 'IBM Plex Mono', 'Menlo', 'Consolas', monospace; border: 1px solid rgba(19, 19, 19, 0.14);">completion_proven: false</code>。项目自己拒绝宣布完成。</p>
+<p style="text-align: center; color: #131313; letter-spacing: 14px; font-size: 11px; margin: 36px 0; user-select: none;">▲ ■ ●</p>
+<h2 style="font-family: 'Futura', 'Avenir Next', 'Avenir', 'Helvetica Neue', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', sans-serif; font-size: 18px; font-weight: 700; color: #131313; margin: 40px 0 16px; padding: 12px 16px; background: #E8E2D3; border-left: 4px solid #1D3FA6; border-radius: 0; line-height: 1.28; letter-spacing: -0.01em;">六、所以我的判断要加一个定语</h2>
+<p style="margin: 16px 0; text-indent: 0; text-align: justify; color: #3B382E; line-height: 1.78;">原话说"GPT 才是代码建模之王"，不够严谨，我自己也不满意。</p>
+<p style="margin: 16px 0; text-indent: 0; text-align: justify; color: #3B382E; line-height: 1.78;">更准确的说法是：</p>
+<p style="margin: 16px 0; text-indent: 0; text-align: justify; color: #3B382E; line-height: 1.78;">在<strong style="color: #DF3524; font-weight: 700;">允许调用工具、反馈信号可测、并且能反复重跑</strong>这三个条件同时成立时，GPT 这类模型在代码建模上的上限，明显高于一次性生成的路线。</p>
+<p style="margin: 16px 0; text-indent: 0; text-align: justify; color: #3B382E; line-height: 1.78;">离开这三个条件，它第一次的产出很差，比不过任何一个会建模的人。</p>
+<p style="margin: 16px 0; text-indent: 0; text-align: justify; color: #3B382E; line-height: 1.78;">它赢的不是天赋，是耐力。</p>
+<p style="margin: 16px 0; text-indent: 0; text-align: justify; color: #3B382E; line-height: 1.78;">代码建模和视觉生成的区别也在这里：视觉模型学的是最终像素，代码建模构造的是像素背后的结构——几何、材质、光照、运动规则。前者能给你一张以假乱真的画面；后者有机会给你一个能从别的角度看、能动、能被别人接手继续改的东西。</p>
+<p style="margin: 16px 0; text-indent: 0; text-align: justify; color: #3B382E; line-height: 1.78;">但"有结构"不等于"物理正确"。几何、动画、动力学，仍然要分别验证。这一点不能含糊，否则又会滑回"看起来很真"的老毛病。</p>
+<p style="text-align: center; color: #131313; letter-spacing: 14px; font-size: 11px; margin: 36px 0; user-select: none;">▲ ■ ●</p>
+<h2 style="font-family: 'Futura', 'Avenir Next', 'Avenir', 'Helvetica Neue', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', sans-serif; font-size: 18px; font-weight: 700; color: #131313; margin: 40px 0 16px; padding: 12px 16px; background: #E8E2D3; border-left: 4px solid #1D3FA6; border-radius: 0; line-height: 1.28; letter-spacing: -0.01em;">七、如果把这套东西推到电影</h2>
+<p style="margin: 16px 0; text-indent: 0; text-align: justify; color: #3B382E; line-height: 1.78;">再往前想一步。</p>
+<p style="margin: 16px 0; text-indent: 0; text-align: justify; color: #3B382E; line-height: 1.78;">电影里已经含着大量信息：人物外貌、服装、动作，建筑结构、场景布置、光照风格，还有叙事节奏。如果一套系统能分析视频、重建三维、生成代码、递归优化，理论上就有机会把电影里的世界重建出来。</p>
+<p style="margin: 16px 0; text-indent: 0; text-align: justify; color: #3B382E; line-height: 1.78;">但电影并没有提供完整的三维信息。镜头之外的空间、看不见的背面、完整的动作系统，还有游戏需要的碰撞、物理、交互与玩法，全都要额外推断和设计。</p>
+<p style="margin: 16px 0; text-indent: 0; text-align: justify; color: #3B382E; line-height: 1.78;">所以这绝不是"把电影转成游戏"这么简单。</p>
+<p style="margin: 16px 0; text-indent: 0; text-align: justify; color: #3B382E; line-height: 1.78;">不过制作一个可交互三维世界的成本，确实可能大幅下降——这是我觉得最值得关注的变化。</p>
+<p style="text-align: center; color: #131313; letter-spacing: 14px; font-size: 11px; margin: 36px 0; user-select: none;">▲ ■ ●</p>
+<h2 style="font-family: 'Futura', 'Avenir Next', 'Avenir', 'Helvetica Neue', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', sans-serif; font-size: 18px; font-weight: 700; color: #131313; margin: 40px 0 16px; padding: 12px 16px; background: #E8E2D3; border-left: 4px solid #1D3FA6; border-radius: 0; line-height: 1.28; letter-spacing: -0.01em;">最后</h2>
+<p style="margin: 16px 0; text-indent: 0; text-align: justify; color: #3B382E; line-height: 1.78;">这次实验给我最大的感受，不是 GPT 已经能做出多完美的模型。</p>
+<p style="margin: 16px 0; text-indent: 0; text-align: justify; color: #3B382E; line-height: 1.78;">而是：<strong style="color: #DF3524; font-weight: 700;">当一个模型能够自主调用工具、分解问题、验证结果并持续改进时，它能完成的任务，可能远超我们对"单次生成能力"的判断。</strong></p>
+<p style="margin: 16px 0; text-indent: 0; text-align: justify; color: #3B382E; line-height: 1.78;">以前让 AI 画一张图，后来让 AI 生成一段视频，现在是让 AI 构造一个可以运动、可以编辑、可以交互的世界。</p>
+<p style="margin: 16px 0; text-indent: 0; text-align: justify; color: #3B382E; line-height: 1.78;">从生成画面，到生成运动，再到生成世界。</p>
+<p style="margin: 16px 0; text-indent: 0; text-align: justify; color: #3B382E; line-height: 1.78;">134 个版本证明的其实只有一件事：一个最初连模型都捏不好的模型，只要每一轮都能看见自己的错误、并且有能力改，它就能走到相当远的地方。</p>
+<p style="margin: 16px 0; text-indent: 0; text-align: justify; color: #3B382E; line-height: 1.78;">所以我的结论保留，但要加限定：</p>
+<p style="margin: 16px 0; text-indent: 0; text-align: justify; color: #3B382E; line-height: 1.78;"><strong style="color: #DF3524; font-weight: 700;">在可测量、可重跑的条件下，GPT 是代码建模最强的那个——不是因为它第一次做得最好，而是因为它是唯一愿意改一百三十四次的。</strong></p>
+<hr style="border: none; height: 2px; background: #131313; margin: 38px 0;"/>
+<p style="margin: 16px 0; text-indent: 0; text-align: justify; color: #3B382E; line-height: 1.78;"><em style="font-style: italic; color: #6F6A5B;">本文数据来自该项目的迭代日志：86 个 .blend 快照、276 份验证 JSON、202 个运行日志。所有指标为同源图像相似度或像素差，非几何真值；拓扑与法向检查不构成自交或解剖学证明。</em></p>
+</section></main>
+<footer class="foot">作者：Dr OtherMind · 公众号「刷屏AI」</footer>
+</div></body></html>
