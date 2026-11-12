@@ -32,6 +32,25 @@
 <img class="cover" src="images/cover.jpg" alt="GPT 才是代码建模之王">
 <main class="card">
 <section style="font-family: 'Helvetica Neue', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', sans-serif; font-size: 15.5px; color: #3B382E; line-height: 1.78; letter-spacing: 0.01em; padding: 22px 20px; background: #F2EEE3;">
+<p style="margin: 16px 0; text-indent: 0; text-align: justify; color: #3B382E; line-height: 1.78;">最近，Google 的一个 Demo 引起了我的兴趣。</p>
+<p style="margin: 16px 0; text-indent: 0; text-align: justify; color: #3B382E; line-height: 1.78;">它展示了一个令人惊讶的能力：给 AI 一段大西洋海底的视频，它就能生成一个 Three.js 的三维场景。</p>
+<p style="margin: 16px 0; text-indent: 0; text-align: justify; color: #3B382E; line-height: 1.78;">至于这个 Demo 究竟是如何实现的，目前有不同的解释。</p>
+<p style="margin: 16px 0; text-indent: 0; text-align: justify; color: #3B382E; line-height: 1.78;">一种说法是，模型本身已经具备了很强的空间感知能力，可以从二维视频中理解三维结构，直接重建场景。</p>
+<p style="margin: 16px 0; text-indent: 0; text-align: justify; color: #3B382E; line-height: 1.78;">另一种说法是，它依靠 Swarm，也就是多智能体协作。整个过程更像一条流水线，有的 Agent 负责几何建模，有的负责材质，有的负责灯光，最后把它们组合成一个完整的三维世界。</p>
+<p style="margin: 16px 0; text-indent: 0; text-align: justify; color: #3B382E; line-height: 1.78;">与此同时，也有人用 Claude 做出了非常惊艳的三维动画。</p>
+<p style="margin: 16px 0; text-indent: 0; text-align: justify; color: #3B382E; line-height: 1.78;">那些作品确实很漂亮，动画流畅，视觉设计也很出色。不过，我看到的案例整体还是偏卡通风格，与真正的超写实三维场景还有一定距离。</p>
+<p style="margin: 16px 0; text-indent: 0; text-align: justify; color: #3B382E; line-height: 1.78;">这让我产生了一个问题。</p>
+<p style="margin: 16px 0; text-indent: 0; text-align: justify; color: #3B382E; line-height: 1.78;">在我心中，GPT 一直是最出色的 AI 绘画工具之一。</p>
+<p style="margin: 16px 0; text-indent: 0; text-align: justify; color: #3B382E; line-height: 1.78;">此前我用它生成过大量概念图。无论是艺术表现、构图、光影还是细节设计，效果都非常好。</p>
+<p style="margin: 16px 0; text-indent: 0; text-align: justify; color: #3B382E; line-height: 1.78;">既然 GPT 可以画出如此漂亮的概念图，为什么不能把这些图真正建成三维世界？</p>
+<p style="margin: 16px 0; text-indent: 0; text-align: justify; color: #3B382E; line-height: 1.78;">于是，我决定做一次实验。</p>
+<p style="text-align: center; color: #131313; letter-spacing: 14px; font-size: 11px; margin: 36px 0; user-select: none;">▲ ■ ●</p>
+<h2 style="font-family: 'Futura', 'Avenir Next', 'Avenir', 'Helvetica Neue', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', sans-serif; font-size: 18px; font-weight: 700; color: #131313; margin: 40px 0 16px; padding: 12px 16px; background: #E8E2D3; border-left: 4px solid #1D3FA6; border-radius: 0; line-height: 1.28; letter-spacing: -0.01em;">一、从生成一张图，到生成一个世界</h2>
+<p style="margin: 16px 0; text-indent: 0; text-align: justify; color: #3B382E; line-height: 1.78;">实验的起点很简单。</p>
+<p style="margin: 16px 0; text-indent: 0; text-align: justify; color: #3B382E; line-height: 1.78;">我先让 GPT 生成了一张概念图。</p>
+<p style="text-align:center;margin:16px 0;"><img src="images/00-concept.jpg" alt="图 00｜GPT 生成的概念图，整个实验的起点" style="max-width: 100%; height: auto; border-radius: 0; margin: 26px auto; display: block; border: 2px solid #131313; background: #F2EEE3;"/></p>
+<p style="font-size: 12.5px; color: #6F6A5B; text-align: left; margin-top: 10px; letter-spacing: 0.06em; font-family: 'SF Mono', 'IBM Plex Mono', 'Menlo', 'Consolas', monospace;">图 00｜GPT 生成的概念图，整个实验的起点</p>
+<p style="margin: 16px 0; text-indent: 0; text-align: justify; color: #3B382E; line-height: 1.78;"><em style="font-style: italic; color: #6F6A5B;">图 00｜GPT 生成的概念图，整个实验的起点。</em></p>
 <p style="margin: 16px 0; text-indent: 0; text-align: justify; color: #3B382E; line-height: 1.78;">如果按照以前的工作流程，我会继续生成几张不同角度的参考图，然后把它们交给 Seedance 这样的视觉生成模型，直接生成一段高清视频。</p>
 <p style="margin: 16px 0; text-indent: 0; text-align: justify; color: #3B382E; line-height: 1.78;">这也是目前很常见的一种高质量 AI 视频制作方式。</p>
 <p style="margin: 16px 0; text-indent: 0; text-align: justify; color: #3B382E; line-height: 1.78;">它的优势很明显：生成速度快，画面漂亮，视觉效果好，而且不需要建立完整的三维模型。</p>
